@@ -1,29 +1,39 @@
--- Dev convenience: drop existing (safe for local)
-DROP TABLE IF EXISTS transactions;
-DROP TABLE IF EXISTS operation_types;
-DROP TABLE IF EXISTS accounts;
+-- Clean for local dev (safe drops)
+DROP TABLE IF EXISTS transactions CASCADE;
+DROP TABLE IF EXISTS accounts CASCADE;
+DROP TABLE IF EXISTS operation_types CASCADE;
 
--- accounts
-CREATE TABLE accounts (
-    id BIGSERIAL PRIMARY KEY,
-    document_number VARCHAR(32) UNIQUE NOT NULL
+-- ACCOUNTS
+CREATE TABLE IF NOT EXISTS accounts (
+  id BIGSERIAL PRIMARY KEY,
+  document_number VARCHAR(20) NOT NULL UNIQUE
 );
 
--- operation_types
-CREATE TABLE operation_types (
-    id SMALLINT PRIMARY KEY,
-    description VARCHAR(64) UNIQUE NOT NULL
+-- OPERATION TYPES (master)
+CREATE TABLE IF NOT EXISTS operation_types (
+  id SMALLINT PRIMARY KEY,
+  description VARCHAR(64) NOT NULL UNIQUE
 );
 
--- transactions
-CREATE TABLE transactions (
-    id BIGSERIAL PRIMARY KEY,
-    account_id BIGINT NOT NULL REFERENCES accounts(id),
-    operation_type_id SMALLINT NOT NULL REFERENCES operation_types(id),
-    amount NUMERIC(19,2) NOT NULL,
-    event_date TIMESTAMPTZ NOT NULL
+-- TRANSACTIONS
+CREATE TABLE IF NOT EXISTS transactions (
+  id BIGSERIAL PRIMARY KEY,
+  account_id BIGINT NOT NULL,
+  operation_type_id SMALLINT NOT NULL,
+  amount NUMERIC(15,2) NOT NULL,
+  event_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+
+  CONSTRAINT fk_transactions_account
+    FOREIGN KEY (account_id) REFERENCES accounts(id),
+
+  CONSTRAINT fk_transactions_operation_type
+    FOREIGN KEY (operation_type_id) REFERENCES operation_types(id),
+
+  CONSTRAINT chk_transactions_amount_nonzero CHECK (amount <> 0)
 );
 
--- helpful indexes
-CREATE INDEX IF NOT EXISTS idx_transactions_account_id ON transactions(account_id);
-CREATE INDEX IF NOT EXISTS idx_transactions_event_date ON transactions(event_date);
+-- Helpful indexes
+CREATE INDEX IF NOT EXISTS idx_transactions_account_id
+  ON transactions (account_id);
+CREATE INDEX IF NOT EXISTS idx_transactions_operation_type_id
+  ON transactions (operation_type_id);

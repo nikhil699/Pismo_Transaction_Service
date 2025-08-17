@@ -109,13 +109,13 @@ Response
 
 
 ### Accounts
-![Accounts Table](images/accounts.png)
+![Accounts Table](accounts.png)
 
 ### Operation Types
-![Operation Types Table](images/operation_type.png)
+![Operation Types Table](operation_type.png)
 
 ### Transactions
-![Transactions Table](images/transaction.png)
+![Transactions Table](transaction.png)
 
 
 

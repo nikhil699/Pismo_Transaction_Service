@@ -36,7 +36,13 @@ A Spring Boot application for managing Accounts and Transactions with PostgreSQL
 
 
 
-1️⃣ Create Account
+
+
+---
+
+
+
+## 1️⃣ Create Account
 
 Request
 
@@ -55,7 +61,7 @@ Response
 "documentNumber": "12345678900"
 }
 
-2️⃣ Fetch Account by ID
+## 2️⃣ Fetch Account by ID
 
 Request
 
@@ -69,7 +75,7 @@ Response
 "documentNumber": "12345678900"
 }
 
-3️⃣ Create Transaction
+## 3️⃣ Create Transaction
 
 Request
 
@@ -93,22 +99,32 @@ Response
 "eventDate": "2025-08-13T14:32:10"
 }
 
-🗄 Database Schema
 
-Accounts
 
-Transactions
-
-Operation Types
+---
 
 
 
+## 🗄 Database Schema
+
+
+### Accounts
+![Accounts Table](images/accounts.png)
+
+### Operation Types
+![Operation Types Table](images/operation_type.png)
+
+### Transactions
+![Transactions Table](images/transaction.png)
 
 
 
-🏗 System Architecture
-flowchart TD
-A[Client / Postman] -->|REST API| B[Spring Boot App]
+---
+
+
+## 🏗 System Architecture
+### flowchart TD
+A[Client / Postman] --> |REST API| B[Spring Boot App]
 B --> C[(PostgreSQL Database)]
 B --> D[(Redis Cache)]
 B --> E[Swagger UI Docs]
@@ -127,37 +143,59 @@ Redis → caches frequently accessed queries (e.g., accounts, operation types)
 
 Swagger UI → interactive API documentation
 
-🛠 Run Locally
-# 1. Clone repository
-git clone https://github.com/nikhil699/Pismo_Capstone_Project.git
-cd Pismo_Capstone_Project
 
-# 2. Build
+
+
+---
+
+
+
+# Clone repository
+cd Pismo_Transaction_Service
+git clone https://github.com/nikhil699/Pismo_Transaction_Service.git
+
+
+
+---
+
+# Build
 mvn clean install
 
-# 3. Run
 mvn spring-boot:run
+
+App → http://localhost:8080
+
+
+
+---
 
 
 ➡️ Swagger UI:
 http://localhost:8080/swagger-ui/index.html#/
 
-🐳 Run with Docker
+
+
+---
+
+
+## Run with Docker
 docker-compose up --build
 
 
-App → http://localhost:8080
+## PostgreSQL → localhost:5432
 
-PostgreSQL → localhost:5432
+### Database Setup
 
-🗄 Database Setup
 -- Connect to DB
+
 docker exec -it postgres-db psql -U postgres -d pismo_db
 
 -- View Tables
+
 \dt
 
 -- Insert master data for Operation Types
+
 INSERT INTO operation_types (id, description) VALUES
 (1, 'CASH PURCHASE'),
 (2, 'INSTALLMENT PURCHASE'),
@@ -165,13 +203,22 @@ INSERT INTO operation_types (id, description) VALUES
 (4, 'PAYMENT');
 
 -- Check Accounts
+
 SELECT * FROM accounts;
 
 -- Check Transactions
+
 SELECT * FROM transactions;
 
 -- Check Operation Types
+
 SELECT * FROM operation_types;
+
+
+---
+
+
+
 
 ❤️ Developed By
 

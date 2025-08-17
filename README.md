@@ -36,106 +36,133 @@ A Spring Boot application for managing Accounts and Transactions with PostgreSQL
 
 
 
+1️⃣ Create Account
 
-### 1️⃣ Create Account
-```json
+Request
+
 POST /accounts
-{
-  "documentNumber": "12345678900"
-}
-✅ Response
+Content-Type: application/json
 
-json
 {
-  "accountId": 1,
-  "documentNumber": "12345678900"
+"documentNumber": "12345678900"
 }
 
 
-### 2️⃣ Fetch Account by ID
-json
+Response
+
+{
+"accountId": 1,
+"documentNumber": "12345678900"
+}
+
+2️⃣ Fetch Account by ID
+
+Request
 
 GET /accounts/1
-✅ Response
 
-json
+
+Response
+
 {
-  "accountId": 1,
-  "documentNumber": "12345678900"
+"accountId": 1,
+"documentNumber": "12345678900"
 }
 
+3️⃣ Create Transaction
 
-### 3️⃣ Create Transaction
-json
+Request
 
 POST /transactions
-{
-  "accountId": 1,
-  "operationTypeId": 4,
-  "amount": 200.50
-}
+Content-Type: application/json
 
-✅ Response
-
-json
 {
-  "transactionId": 1,
-  "accountId": 1,
-  "operationTypeId": 4,
-  "amount": 200.50,
-  "eventDate": "2025-08-13T14:32:10"
+"accountId": 1,
+"operationTypeId": 4,
+"amount": 200.50
 }
 
 
+Response
+
+{
+"transactionId": 1,
+"accountId": 1,
+"operationTypeId": 4,
+"amount": 200.50,
+"eventDate": "2025-08-13T14:32:10"
+}
+
+🗄 Database Schema
+
+Accounts
+
+Transactions
+
+Operation Types
 
 
-## Database
-
-![Transaction Database](images/TransactionDataBase.png)
-
-![Accounts Database](images/AccountsDataBase.png)
-
-![Operation Database](images/OperationDataBase.png)
 
 
 
+
+🏗 System Architecture
+flowchart TD
+A[Client / Postman] -->|REST API| B[Spring Boot App]
+B --> C[(PostgreSQL Database)]
+B --> D[(Redis Cache)]
+B --> E[Swagger UI Docs]
+
+    C <--> B
+    D <--> B
+
+
+Client → sends API requests
+
+Spring Boot App → processes accounts & transactions
+
+PostgreSQL → stores persistent data
+
+Redis → caches frequently accessed queries (e.g., accounts, operation types)
+
+Swagger UI → interactive API documentation
 
 🛠 Run Locally
-bash
-# 1. Clone repo
+# 1. Clone repository
 git clone https://github.com/nikhil699/Pismo_Capstone_Project.git
+cd Pismo_Capstone_Project
 
 # 2. Build
 mvn clean install
 
 # 3. Run
-mvn spring-boot: run
+mvn spring-boot:run
 
 
-
-
-Swagger UI:
-http://localhost:9090/swagger-ui/index.html#/
-
-
+➡️ Swagger UI:
+http://localhost:8080/swagger-ui/index.html#/
 
 🐳 Run with Docker
-bash
 docker-compose up --build
-App runs on: http://localhost:8080
 
 
+App → http://localhost:8080
 
-
-PostgreSQL on: localhost:5432
+PostgreSQL → localhost:5432
 
 🗄 Database Setup
-sql
 -- Connect to DB
- docker exec -it postgres-db psql -U postgres -d pismo_db
+docker exec -it postgres-db psql -U postgres -d pismo_db
 
 -- View Tables
 \dt
+
+-- Insert master data for Operation Types
+INSERT INTO operation_types (id, description) VALUES
+(1, 'CASH PURCHASE'),
+(2, 'INSTALLMENT PURCHASE'),
+(3, 'WITHDRAWAL'),
+(4, 'PAYMENT');
 
 -- Check Accounts
 SELECT * FROM accounts;
@@ -143,12 +170,10 @@ SELECT * FROM accounts;
 -- Check Transactions
 SELECT * FROM transactions;
 
--- Check Document
-SELECT * FROM operationstypes;
+-- Check Operation Types
+SELECT * FROM operation_types;
 
+❤️ Developed By
 
-
-
-
-💡 Developed with ❤️ and Java.
 Nikhil Chaurasiya
+Built with passion for clean architecture, scalability, and performance.

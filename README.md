@@ -152,6 +152,7 @@ Swagger UI → interactive API documentation
 
 # Clone repository
 cd Pismo_Transaction_Service
+
 git clone https://github.com/nikhil699/Pismo_Transaction_Service.git
 
 
@@ -186,14 +187,15 @@ docker-compose up --build
 
 ### Database Setup
 
+#
 -- Connect to DB
 
 docker exec -it postgres-db psql -U postgres -d pismo_db
-
+#
 -- View Tables
 
 \dt
-
+#
 -- Insert master data for Operation Types
 
 INSERT INTO operation_types (id, description) VALUES
@@ -201,26 +203,32 @@ INSERT INTO operation_types (id, description) VALUES
 (2, 'INSTALLMENT PURCHASE'),
 (3, 'WITHDRAWAL'),
 (4, 'PAYMENT');
-
+#
 -- Check Accounts
 
 SELECT * FROM accounts;
-
+#
 -- Check Transactions
 
 SELECT * FROM transactions;
-
+#
 -- Check Operation Types
 
 SELECT * FROM operation_types;
 
 
+
+#
+
 ---
 
+---
 
+---
+#
 
-
-❤️ Developed By
+##
+### ❤️ Developed By
 
 Nikhil Chaurasiya
 Built with passion for clean architecture, scalability, and performance.

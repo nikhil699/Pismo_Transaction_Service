@@ -157,7 +157,7 @@ git clone https://github.com/nikhil699/Pismo_Transaction_Service.git
 
 
 
----
+#
 
 # Build
 mvn clean install
@@ -168,7 +168,7 @@ App → http://localhost:8080
 
 
 
----
+#
 
 
 ➡️ Swagger UI:
@@ -176,7 +176,7 @@ http://localhost:8080/swagger-ui/index.html#/
 
 
 
----
+#
 
 
 ## Run with Docker
@@ -220,11 +220,7 @@ SELECT * FROM operation_types;
 
 #
 
----
-
----
-
----
+#
 #
 
 ##

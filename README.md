@@ -180,17 +180,18 @@ http://localhost:8080/swagger-ui/index.html#/
 
 
 ## Run with Docker
+
 docker-compose up --build
 
 
-## PostgreSQL → localhost:5432
 
 ### Database Setup
 
 #
 -- Connect to DB
 
-docker exec -it postgres-db psql -U postgres -d pismo_db
+docker exec -it pismo_transaction-db-1 psql -U postgres -d pismo_db
+
 #
 -- View Tables
 

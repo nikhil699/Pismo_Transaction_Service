@@ -1,4 +1,4 @@
--- Clean for local dev (safe drops)
+-- Drop (fresh start)
 DROP TABLE IF EXISTS transactions CASCADE;
 DROP TABLE IF EXISTS accounts CASCADE;
 DROP TABLE IF EXISTS operation_types CASCADE;
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS transactions (
   account_id BIGINT NOT NULL,
   operation_type_id SMALLINT NOT NULL,
   amount NUMERIC(15,2) NOT NULL,
-  event_date TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+  event_date TIMESTAMP NOT NULL DEFAULT NOW(),
 
   CONSTRAINT fk_transactions_account
     FOREIGN KEY (account_id) REFERENCES accounts(id),
@@ -32,7 +32,6 @@ CREATE TABLE IF NOT EXISTS transactions (
   CONSTRAINT chk_transactions_amount_nonzero CHECK (amount <> 0)
 );
 
--- Helpful indexes
 CREATE INDEX IF NOT EXISTS idx_transactions_account_id
   ON transactions (account_id);
 CREATE INDEX IF NOT EXISTS idx_transactions_operation_type_id

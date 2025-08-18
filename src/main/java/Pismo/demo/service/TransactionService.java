@@ -52,7 +52,7 @@ public class TransactionService {
         return switch (operationTypeId) {
             case 1, 2, 3 -> amount.abs().negate();
             case 4 -> amount.abs();
-            default -> amount; // fallback (shouldn’t happen if DB preloaded correctly)
+            default -> amount;
         };
     }
 }

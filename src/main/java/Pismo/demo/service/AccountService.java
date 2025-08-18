@@ -16,7 +16,7 @@ public class AccountService {
         this.repo = repo;
     }
 
-    // CREATE → newly created account ko cache me daal do (key = new id)
+    // CREATE → put the newly created account in the cache (key = new id)
     @CachePut(value = "accounts", key = "#result.id")
     public Account createAccount(String documentNumber) {
         Account account = new Account();
@@ -24,7 +24,7 @@ public class AccountService {
         return repo.save(account);
     }
 
-    // READ → cache hit/hit-miss
+    // READ → check cache (hit or miss)
     @Cacheable(value = "accounts", key = "#id")
     public Account getAccount(Long id) {
         return repo.findById(id)

@@ -20,10 +20,10 @@ public class TransactionRequest {
     private Short operationTypeId;
 
     /**
-     * Client हमेशा positive amount भेजेगा.
-     * Business rule के अनुसार service layer इसे
-     * PURCHASE/WITHDRAWAL के लिए negative में store करेगी,
-     * PAYMENT के लिए positive ही रखेगी.
+     * The client will always send a positive amount.
+     * According to the business rule, the service layer will store it
+     * as negative for PURCHASE/WITHDRAWAL,
+     * and will keep it positive for PAYMENT.
      */
     @NotNull
     @Positive

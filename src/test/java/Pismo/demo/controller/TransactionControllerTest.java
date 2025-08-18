@@ -62,7 +62,7 @@ class TransactionControllerTest {
                 }
                 """;
 
-        // Act + Assert
+
         mockMvc.perform(post("/transactions")
                         .contentType("application/json")
                         .content(payload))

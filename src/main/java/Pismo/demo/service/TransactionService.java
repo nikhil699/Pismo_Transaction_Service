@@ -12,9 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.List;
 
 @Service
 public class TransactionService {
+
+    private static final short CASH = 1;
+    private static final short INSTALLMENT = 2;
+    private static final short WITHDRAWAL = 3;
+    private static final short PAYMENT = 4;
 
     private final TransactionRepository txRepo;
     private final AccountRepository accountRepo;
@@ -32,27 +38,66 @@ public class TransactionService {
     public Transaction createTransaction(Long accountId, Short operationTypeId, BigDecimal amount) {
         Account account = accountRepo.findById(accountId)
                 .orElseThrow(() -> new NotFoundException("Account not found: " + accountId));
+
         OperationType ot = otRepo.findById(operationTypeId)
                 .orElseThrow(() -> new NotFoundException("OperationType not found: " + operationTypeId));
 
-        BigDecimal signedAmount = applyBusinessRule(ot.getId(), amount);
+        // sign rules: purchases/withdrawals negative, payment positive
+        BigDecimal signedAmount = switch (operationTypeId) {
+            case CASH, INSTALLMENT, WITHDRAWAL -> amount.abs().negate();
+            case PAYMENT -> amount.abs();
+            default -> amount;
+        };
 
         Transaction tx = new Transaction();
         tx.setAccount(account);
         tx.setOperationType(ot);
         tx.setAmount(signedAmount);
         tx.setEventDate(OffsetDateTime.now());
+        // NEW: start balance = amount itself
+        tx.setBalance(signedAmount);
 
-        return txRepo.save(tx);
+        // Persist first (so payment row exists even if it fully discharges)
+        tx = txRepo.save(tx);
+
+        // If this is a payment, discharge older negatives FIFO
+        if (operationTypeId == PAYMENT && tx.getBalance().compareTo(BigDecimal.ZERO) > 0) {
+            applyPaymentDischarge(tx);
+        }
+
+        return tx;
     }
 
-    private BigDecimal applyBusinessRule(short operationTypeId, BigDecimal amount) {
-        // Rule: for CASH(1), INSTALLMENT(2), WITHDRAWAL(3) => negative
-        // for PAYMENT(4) => positive
-        return switch (operationTypeId) {
-            case 1, 2, 3 -> amount.abs().negate();
-            case 4 -> amount.abs();
-            default -> amount;
-        };
+    /**
+     * Discharge rule:
+     *  - Pick older negative-balance transactions (opTypes 1,2,3) for the same account ordered by eventDate ASC
+     *  - Subtract payment into them until payment runs out
+     *  - Update both sides' balances
+     */
+    private void applyPaymentDischarge(Transaction paymentTx) {
+        BigDecimal remaining = paymentTx.getBalance(); // always positive here
+
+        // Get candidates: negative balances, opType in [1,2,3], oldest first
+        List<Transaction> negatives = txRepo.findByAccount_IdAndBalanceLessThanAndOperationType_IdInOrderByEventDateAsc(
+                paymentTx.getAccount().getId(),
+                BigDecimal.ZERO,
+                List.of(CASH, INSTALLMENT, WITHDRAWAL)
+        );
+
+        for (Transaction neg : negatives) {
+            if (remaining.signum() <= 0) break;
+
+            BigDecimal need = neg.getBalance().abs(); // positive magnitude needed to clear this row
+            BigDecimal used = remaining.min(need);
+
+            // apply discharge
+            neg.setBalance(neg.getBalance().add(used));       // since neg.balance is negative, +used moves towards zero
+            paymentTx.setBalance(paymentTx.getBalance().subtract(used));
+
+            txRepo.save(neg);
+            remaining = paymentTx.getBalance();
+        }
+
+        txRepo.save(paymentTx);
     }
 }

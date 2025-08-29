@@ -13,5 +13,6 @@ public class TransactionResponse {
     private Long accountId;
     private Short operationTypeId;
     private BigDecimal amount;
+    private BigDecimal balance;
     private OffsetDateTime eventDate;
 }

@@ -6,7 +6,11 @@ import lombok.*;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "transactions")
 public class Transaction {
@@ -26,6 +30,10 @@ public class Transaction {
 
     @Column(name = "amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal amount;
+
+    // 🆕 Balance column: current remaining balance of this transaction
+    @Column(name = "balance", nullable = false, precision = 15, scale = 2)
+    private BigDecimal balance;
 
     @Column(name = "event_date", nullable = false)
     private OffsetDateTime eventDate;    // DB: TIMESTAMPTZ

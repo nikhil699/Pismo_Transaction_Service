@@ -1,5 +1,6 @@
 package Pismo.demo.controller;
 
+import Pismo.demo.dto.AccountRequest;
 import Pismo.demo.dto.AccountResponse;
 import Pismo.demo.dto.TransactionRequest;
 import Pismo.demo.entities.Account;
@@ -37,7 +38,7 @@ public class AccountController {
             }
     )
     @PostMapping
-    public ResponseEntity<AccountResponse> create(@Valid @RequestBody TransactionRequest.AccountRequest req) {
+    public ResponseEntity<AccountResponse> create(@Valid @RequestBody AccountRequest req) {
         Account created = accountService.createAccount(req.getDocumentNumber());
         AccountResponse body = AccountMapper.toResponse(created);
         return ResponseEntity

@@ -16,7 +16,6 @@ public class TransactionRequest {
     @NotNull
     private Short operationTypeId;
 
-    // Client hamesha positive amount bheje; service sign set karegi.
     @NotNull
     @Positive
     private BigDecimal amount;

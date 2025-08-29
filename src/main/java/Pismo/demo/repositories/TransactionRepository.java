@@ -9,10 +9,7 @@ import java.util.List;
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
     List<Transaction> findByAccount_Id(Long accountId);
 
-    // 👇 OLD method hata do (signature mismatch karta tha)
-    // List<Transaction> findByAccountIdAndBalanceLessThanOrderByEventDateAsc(Long accountId, BigDecimal zero);
 
-    // 👇 NEW: service me jis method ka use ho raha hai wahi add karo
     List<Transaction> findByAccount_IdAndBalanceLessThanAndOperationType_IdInOrderByEventDateAsc(
             Long accountId,
             BigDecimal balance,

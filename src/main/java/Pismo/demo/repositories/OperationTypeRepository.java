@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface OperationTypeRepository extends JpaRepository<OperationType, Short> {
     Optional<Account> findByDocumentNumber(String documentNumber);
+
 }

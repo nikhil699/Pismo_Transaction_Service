@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.net.URI;
 
+import static Pismo.demo.config.ApiStatusCodes.BAD_REQUEST;
+import static Pismo.demo.config.ApiStatusCodes.CREATED;
 
 
 @RestController
@@ -32,9 +34,9 @@ public class AccountController {
     @Operation(
             summary = "Create account",
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Created",
+                    @ApiResponse(responseCode = CREATED, description = "Create Account",
                             content = @Content(schema = @Schema(implementation = AccountResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "Validation error")
+                    @ApiResponse(responseCode = BAD_REQUEST, description = "Validation error")
             }
     )
     @PostMapping

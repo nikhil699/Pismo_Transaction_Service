@@ -54,13 +54,11 @@ public class TransactionService {
         tx.setOperationType(ot);
         tx.setAmount(signedAmount);
         tx.setEventDate(OffsetDateTime.now());
-        // NEW: start balance = amount itself
         tx.setBalance(signedAmount);
 
-        // Persist first (so payment row exists even if it fully discharges)
+
         tx = txRepo.save(tx);
 
-        // If this is a payment, discharge older negatives FIFO
         if (operationTypeId == PAYMENT && tx.getBalance().compareTo(BigDecimal.ZERO) > 0) {
             applyPaymentDischarge(tx);
         }
@@ -77,7 +75,6 @@ public class TransactionService {
     private void applyPaymentDischarge(Transaction paymentTx) {
         BigDecimal remaining = paymentTx.getBalance(); // always positive here
 
-        // Get candidates: negative balances, opType in [1,2,3], oldest first
         List<Transaction> negatives = txRepo.findByAccount_IdAndBalanceLessThanAndOperationType_IdInOrderByEventDateAsc(
                 paymentTx.getAccount().getId(),
                 BigDecimal.ZERO,

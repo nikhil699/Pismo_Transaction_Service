@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import static Pismo.demo.config.ApiStatusCodes.*;
+
 
 @RestController
 @RequestMapping("/transactions")
@@ -34,10 +36,10 @@ public class TransactionController {
             summary = "Create transaction",
             description = "Send the Amount always as positive; the service will set the sign according to business rules.",
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Created",
+                    @ApiResponse(responseCode = CREATED, description = "Create the transaction",
                             content = @Content(schema = @Schema(implementation = TransactionResponse.class))),
-                    @ApiResponse(responseCode = "400", description = "Validation error / Unknown OperationType"),
-                    @ApiResponse(responseCode = "404", description = "Account / OperationType not found")
+                    @ApiResponse(responseCode = BAD_REQUEST, description = "Validation error / Unknown OperationType"),
+                    @ApiResponse(responseCode = NOT_FOUND, description = "Account / OperationType not found")
             }
     )
     @PostMapping

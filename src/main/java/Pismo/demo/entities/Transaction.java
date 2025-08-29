@@ -31,7 +31,6 @@ public class Transaction {
     @Column(name = "amount", nullable = false, precision = 15, scale = 2)
     private BigDecimal amount;
 
-    // 🆕 Balance column: current remaining balance of this transaction
     @Column(name = "balance", nullable = false, precision = 15, scale = 2)
     private BigDecimal balance;
 

@@ -1,4 +1,5 @@
 package Pismo.demo.config;
 
-public class ApiStatusCodes {
+public final class ApiStatusCodes {
+
 }

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.tags.Tag;
+
 
 @RestController
 @RequestMapping("/transactions")
@@ -32,7 +32,7 @@ public class TransactionController {
 
     @Operation(
             summary = "Create transaction",
-            description = "Amount हमेशा positive भेजिए; service business rules के अनुसार sign set करेगी.",
+            description = "Send the Amount always as positive; the service will set the sign according to business rules.",
             responses = {
                     @ApiResponse(responseCode = "201", description = "Created",
                             content = @Content(schema = @Schema(implementation = TransactionResponse.class))),

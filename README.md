@@ -197,7 +197,7 @@ docker exec -it pismo_transaction-db-1 psql -U postgres -d pismo_db
 
 \dt
 #
--- Insert master data for Operation Types
+-- Insert master data for Operation Types table if its not there.
 
 INSERT INTO operation_types (id, description) VALUES
 (1, 'CASH PURCHASE'),

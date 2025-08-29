@@ -7,11 +7,14 @@ import Pismo.demo.exception.NotFoundException;
 import Pismo.demo.repositories.AccountRepository;
 import Pismo.demo.repositories.OperationTypeRepository;
 import Pismo.demo.repositories.TransactionRepository;
+import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.Comparator;
+import java.util.List;
 
 @Service
 public class TransactionService {
@@ -41,9 +44,24 @@ public class TransactionService {
         tx.setAccount(account);
         tx.setOperationType(ot);
         tx.setAmount(signedAmount);
+
+        if (operationTypeId== 4)
+        {
+            tx.setBalance(BigDecimal.ZERO);
+        }
+        else {
+            tx.setBalance(signedAmount);
+        }
         tx.setEventDate(OffsetDateTime.now());
 
-        return txRepo.save(tx);
+        Transaction saved = txRepo.save(tx);
+
+        if (operationTypeId == 4)
+        {
+            dischargeTransactions(accountId, signedAmount);
+        }
+
+        return saved;
     }
 
     private BigDecimal applyBusinessRule(short operationTypeId, BigDecimal amount) {
@@ -54,5 +72,35 @@ public class TransactionService {
             case 4 -> amount.abs();
             default -> amount;
         };
+    }
+
+    private void dischargeTransactions(Long accountId, BigDecimal payment)
+    {
+        List<Transaction> debts = txRepo.findByAccount_Id(accountId).stream()
+                .filter(t -> t.getBalance().compareTo(BigDecimal.ZERO) < 0)
+                .sorted(Comparator.comparing(Transaction::getEventDate))
+                .toList();
+
+        BigDecimal remaining = payment ;
+
+        for (Transaction debt : debts)
+        {
+            if (remaining.compareTo(BigDecimal.ZERO) <= 0 ) break;
+
+            BigDecimal debtAbs = debt.getBalance().abs();
+
+            if (remaining.compareTo(debtAbs) >= 0)
+            {
+                debt.setBalance(BigDecimal.ZERO);
+                remaining = remaining.subtract(debtAbs);
+            }
+            else{
+                debt.setBalance(debt.getBalance().add(remaining));
+                remaining = BigDecimal.ZERO;
+            }
+
+            txRepo.save(debt);
+        }
+
     }
 }

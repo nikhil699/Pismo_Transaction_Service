@@ -29,6 +29,7 @@ public class TransactionRequest {
     @Positive
     private BigDecimal amount;
 
+
     @Getter @Setter
     @NoArgsConstructor @AllArgsConstructor
     @Builder

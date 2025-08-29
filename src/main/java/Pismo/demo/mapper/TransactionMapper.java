@@ -13,6 +13,7 @@ public final class TransactionMapper {
                 .accountId(tx.getAccount() != null ? tx.getAccount().getId() : null)
                 .operationTypeId(tx.getOperationType() != null ? tx.getOperationType().getId() : null)
                 .amount(tx.getAmount())
+                .amount(tx.getBalance())
                 .eventDate(tx.getEventDate())
                 .build();
     }

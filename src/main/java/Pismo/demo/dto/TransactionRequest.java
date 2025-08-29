@@ -29,6 +29,12 @@ public class TransactionRequest {
     @Positive
     private BigDecimal amount;
 
+    @NotNull
+    @Positive
+    private BigDecimal balance;
+
+
+
 
     @Getter @Setter
     @NoArgsConstructor @AllArgsConstructor

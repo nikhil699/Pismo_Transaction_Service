@@ -54,14 +54,13 @@ public class TransactionService {
         }
         tx.setEventDate(OffsetDateTime.now());
 
-        Transaction saved = txRepo.save(tx);
+
 
         if (operationTypeId == 4)
         {
             dischargeTransactions(accountId, signedAmount);
         }
-
-        return saved;
+        return txRepo.save(tx);
     }
 
     private BigDecimal applyBusinessRule(short operationTypeId, BigDecimal amount) {

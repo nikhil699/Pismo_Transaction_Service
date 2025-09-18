@@ -142,9 +142,9 @@ PostgreSQL → stores persistent data
 Redis → caches frequently accessed queries (e.g., accounts, operation types)
 
 Swagger UI → interactive API documentation
+Postman Workspace : https://web.postman.co/workspace/My-Workspace~5f16d414-1cd5-4848-8a59-853b1909ed3f/request/20008032-b5e9be6c-eef2-4d94-a42a-8f13399063c5
 
-
-
+Swagger Workspace : http://localhost:8080/swagger-ui/index.html#/
 
 ---
 
